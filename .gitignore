@@ -3,5 +3,6 @@
 .clang-format
 
 *.out
+*.html
 
 assembler
