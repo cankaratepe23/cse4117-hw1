@@ -14,4 +14,4 @@ lpp     st 1 2
         jz loop
         jmp lpp
 loop    sub 1 2 3
-jp1     jmp lp1
+lp1     jmp lp1
