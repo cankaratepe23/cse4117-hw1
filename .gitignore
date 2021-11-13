@@ -4,5 +4,6 @@
 
 *.out
 *.html
+sample*.ram
 
 assembler
