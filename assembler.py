@@ -113,7 +113,7 @@ def gethexinstruction(instruction: Instruction):
         instructionline_1 = instructionline_1 | (alucodes[operation] << 6) | (args[0] << 3) | args[0]
     elif operation == "mov" or operation == "not":
         #                                                ALU CODE                    r2         r1
-        instructionline_1 = instructionline_1 | (alucodes[operation] << 6) | (args[0] << 3) | args[0]
+        instructionline_1 = instructionline_1 | (alucodes[operation] << 6) | (args[1] << 3) | args[0]
     elif operation == "add" or operation == "sub" or operation == "and" or operation == "xor":
         #                                                ALU CODE                    r2             r3           r1
         instructionline_1 = instructionline_1 | (alucodes[operation] << 9) | (args[1] << 6) | (args[2] << 3) | args[0]
@@ -205,4 +205,4 @@ def assemble(inputfilename: str, outfilename: str):
 
 
 
-assemble("terms-sum.asm", "terms-sum.ram")
+assemble("test.asm", "test1.ram")

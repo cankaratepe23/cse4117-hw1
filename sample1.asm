@@ -1,5 +1,5 @@
 .data
-        count: 60
+        count: 5
         array: .space 10
         char: 0xfe
 .code
