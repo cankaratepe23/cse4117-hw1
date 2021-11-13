@@ -1,5 +1,6 @@
 import difflib
 import os
+import sys
 import webbrowser
 
 opcodeshiftleftamount = 12
@@ -203,6 +204,11 @@ def assemble(inputfilename: str, outfilename: str):
     outfile.write(outcontent)
     outfile.close()
 
+if len(sys.argv) < 3:
+    print("Please at least enter 1 input and 1 output file name.")
+    exit(-1)
 
+infilename = sys.argv[1]
+outfilename = sys.argv[2]
+assemble(infilename, outfilename)
 
-assemble("terms-sum.asm", "test1.ram")
