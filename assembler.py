@@ -144,6 +144,8 @@ def assemble(inputfilename: str, outfilename: str):
 
     # Read the .data and .code sections (with all labels and variable names stored as strings) in Python objects
     for line in sourcecontent:
+        if line.isspace():
+            continue
         haslabel: bool = False
         tokenized = line.split()
 
@@ -203,5 +205,4 @@ def assemble(inputfilename: str, outfilename: str):
 
 
 
-assemble("sample1.asm", "sample1.ram")
-testoutput("sample1.ram", "sample1-correct.ram", True)
+assemble("terms-sum.asm", "terms-sum.ram")
