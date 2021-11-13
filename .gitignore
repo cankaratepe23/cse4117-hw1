@@ -6,5 +6,6 @@
 *.exe
 *.html
 sample*.ram
+terms*.ram
 
 assembler
