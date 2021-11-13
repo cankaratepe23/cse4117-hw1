@@ -3,6 +3,7 @@
 .clang-format
 
 *.out
+*.exe
 *.html
 sample*.ram
 
