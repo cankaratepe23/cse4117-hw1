@@ -205,4 +205,4 @@ def assemble(inputfilename: str, outfilename: str):
 
 
 
-assemble("test.asm", "test1.ram")
+assemble("terms-sum.asm", "test1.ram")
