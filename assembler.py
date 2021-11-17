@@ -144,9 +144,13 @@ def assemble(inputfilename: str, outfilename: str):
     outcontent = ""
 
     # Read the .data and .code sections (with all labels and variable names stored as strings) in Python objects
-    for line in sourcecontent:
+    for srcline in sourcecontent:
+        line = srcline
+        if "//" in line:
+            line = srcline.split("//")[0]
         if line.isspace():
             continue
+
         haslabel: bool = False
         tokenized = line.split()
 
@@ -211,4 +215,3 @@ if len(sys.argv) < 3:
 infilename = sys.argv[1]
 outfilename = sys.argv[2]
 assemble(infilename, outfilename)
-
