@@ -5,8 +5,9 @@ import webbrowser
 
 opcodeshiftleftamount = 12
 definedinstructions = {"ldi": 1, "inc": 7, "dec": 7, "mov": 7, "not": 7, "add": 7,
-                       "sub": 7, "and": 7, "or": 7, "xor": 7, "ld": 2, "st": 3, "jmp": 5, "jz": 4}
-alucodes = {"inc": 58, "dec": 59, "mov": 57, "not": 56, "add": 0, "sub": 1, "and": 2, "or": 3, "xor": 4, }
+                       "sub": 7, "and": 7, "or": 7, "xor": 7, "ld": 2, "st": 3, "jmp": 5, "jz": 4,
+                       "push": 10, "pop": 11, "call": 12, "ret": 13}
+alucodes = {"inc": 58, "dec": 59, "mov": 57, "not": 56, "add": 0, "sub": 1, "and": 2, "or": 3, "xor": 4 }
 instructions = []
 variables = []
 codeblocksize = 0
