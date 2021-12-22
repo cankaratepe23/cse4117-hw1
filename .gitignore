@@ -5,8 +5,12 @@
 *.out
 *.exe
 *.html
-sample*.ram
-terms*.ram
+*.dat
+*.ram
+*.zip
+*.jpeg
+*.jpg
+*.mp4
 
 assembler
 
