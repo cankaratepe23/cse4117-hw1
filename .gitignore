@@ -7,6 +7,9 @@
 *.html
 *.ram
 *.zip
+*.jpeg
+*.jpg
+*.mp4
 
 assembler
 
