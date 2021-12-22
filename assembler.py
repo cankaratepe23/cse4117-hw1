@@ -15,6 +15,25 @@ datablocksize = 0
 
 
 class Variable:
+    """This class represents a variable in the data section of the assembly code.
+
+    name: str
+        The name of the variable
+    isarray: bool
+        Whether the variable is a single variable, or an allocated array space
+        for multiple variables.
+    valueorsize: int
+        The value of the variable if it's a single variable,
+        or the size of the array if it's an array.
+    address: int
+        The address of the variable, has to be calculated after the code section
+        has been read completely.
+    size: int
+        This is a computed value which always represents the size of the variable.
+        It is the size of the array when the variable is an array, and 1 when
+        the variable is just a variable.
+    """
+
     def __init__(self, name, isarray, valueorsize):
         self.name: str = name
         self.isarray: bool = isarray
@@ -29,13 +48,31 @@ class Variable:
 
 
 class Instruction:
+    """Represents an instruction.
+
+    strop: str
+        The string opcode of the instruction, such as "ldi".
+    strargs: list[str]
+        The instruction operands, tokenized, as a list of strings.
+    strlabel: str
+        The label of the instruction, None if the instruction has no label.
+    args: list
+        Will hold the numeric values of the operands, after converting numeric strings and labels.
+    opcode: int
+        The opcode number of the instruciton.
+    address: int
+        The address of the instruction. Initialized to the size of the code block at init.
+    size: int
+        The size of the instruction. The only 2 byte instruction is ldi, all the rest are 1.
+    """
+
     def __init__(self, strop, strargs, strlabel=None):
-        self.strop = strop
-        self.strargs = strargs
-        self.args = []
-        self.opcode = definedinstructions[strop]
-        self.address = codeblocksize
-        self.strlabel = strlabel
+        self.strop: str = strop
+        self.strargs: list[str] = strargs
+        self.args: list = []
+        self.opcode: int = definedinstructions[strop]
+        self.address: int = codeblocksize
+        self.strlabel: str = strlabel
         if self.strop == "ldi":
             self.size = 2
         else:
@@ -46,6 +83,13 @@ class Instruction:
 
 
 def testoutput(filename: str, referencefilename: str, display=False):
+    """Compares the differences between two machine code files.
+
+    This function reads two compiled machine code files, one representing the code-generated code
+    and one representing a correct output, and graphically shows where they differ in an HTML file.
+    This function uses the difflib module.
+    """
+
     referencefile = open(referencefilename)
     referencecontent = referencefile.readlines()
     referencefile.close()
@@ -65,6 +109,13 @@ def testoutput(filename: str, referencefilename: str, display=False):
         raise AssertionError("The generated output does not match the reference file.")
 
 def twoscomplement(number: int):
+    """Returns the 12-bit two's complement representation of a negative number.
+
+    The returned integer is the 0-extended, 12-bit two's complement number. This function is used
+    so that when OR'ing the operands with the opcode section, the 1 bits of negative numbers don't
+    override the opcode section.
+    """
+
     absolute = abs(number)
     absolutebinary = f'{absolute:0>12b}'
     invertedbinary = absolutebinary.replace('0', 'X').replace('1', '0').replace('X', '1')
@@ -73,6 +124,18 @@ def twoscomplement(number: int):
     return result
 
 def findlabelorvariable(label: str, sourceinstruction: Instruction):
+    """
+    This method is used to replace variable or jump labels
+    with the corresponding values or jump offsets.
+
+    label: str
+        The string name of the label to search for.
+    sourceinstruction: Instruction
+        The instruction that contains the label as an operand. In the case that
+        the label is a jump label, the offset is calculated using
+        the address of this instruction.
+    """
+
     instruction: Instruction
     for instruction in instructions:
         if instruction.strlabel and instruction.strlabel == label:
@@ -89,23 +152,32 @@ def findlabelorvariable(label: str, sourceinstruction: Instruction):
     raise KeyError("Label " + label + " does not reference anything.")
 
 def gethexvariable(variable: Variable):
+    """Returns either the value of the variable as a hex string,
+    or n number of "0000" strings seperated by newlines, where n is the size of the array."""
+
     if variable.isarray:
         return (variable.size * (f'{0:0>4x}' + "\n")).strip()
     else:
         return f'{variable.valueorsize:0>4x}'
 
 def gethexinstruction(instruction: Instruction):
+    """Returns the machine code string for the instruction.
+
+    instruction.args should be calculated before calling this method.
+    """
+
     operation: str
     operation = instruction.strop
     args: list
     args = instruction.args
 
     # An instruction line consists of an opcode and any arguments.
-    # Any addition should be made by bit-shifting the value, and OR'ing with the existing instruction line.
+    # Any addition should be made by bit-shifting the value,
+    # and OR'ing with the existing instruction line.
     instructionline_1 = definedinstructions[operation] << opcodeshiftleftamount
     # This line is for 32-bit instructions only.
     instructionline_2 = 0
-    if operation == "ldi":
+    if operation == "ldi" or operation == "pop":
         #                                         r
         instructionline_1 = instructionline_1 | args[0]
         #                     x
@@ -125,16 +197,37 @@ def gethexinstruction(instruction: Instruction):
     elif operation == "st":
         #                                               r2              r1
         instructionline_1 = instructionline_1 | (args[1] << 6) | (args[0] << 3)
-    elif operation == "jmp" or operation == "jz":
+    elif operation == "jmp" or operation == "jz" or operation == "call":
         #                                         x
         instructionline_1 = instructionline_1 | args[0]
+    elif operation == "push":
+        #                                               r
+        instructionline_1 = instructionline_1 | (args[0] << 3)
+    elif operation == "ret": # This line is needed to avoid exceptions.
+        # d
+        pass
     else:
         raise ValueError("Unkown operation " + operation +
                          " was passed to the method.")
-    
+
     return f'{instructionline_1:0>4x}' + ("\n" + f'{instructionline_2:0>4x}' if operation == "ldi" else "")
 
 def assemble(inputfilename: str, outfilename: str):
+    """Reads from given text file inputfilename, and writes output to outfilename as machine code.
+
+    Contents of outfilename are always overwritten.
+
+    The function first reads through the entire source code, storing everything as-is.
+    It then goes through all the variables, calculating the memory address for each variable.
+
+    Afterwards, it generates numeric addresses for string labels and variables, using the addresses
+    that were calculated earlier. While doing this, it also starts writing the instruction machine
+    codes into a variable to print later.
+
+    When the code section is done, the function adds the variables and arrays as hex strings to the
+    same variable. Finally, the generated string is written to outfilename.
+    """
+
     readingdata: bool = False
     readingcode: bool = False
 
@@ -144,7 +237,8 @@ def assemble(inputfilename: str, outfilename: str):
 
     outcontent = ""
 
-    # Read the .data and .code sections (with all labels and variable names stored as strings) in Python objects
+    # Read the .data and .code sections
+    # (with all labels and variable names stored as strings in Python objects)
     for srcline in sourcecontent:
         line = srcline
         if "//" in line:
@@ -185,7 +279,7 @@ def assemble(inputfilename: str, outfilename: str):
                 instructions.append(Instruction(tokenized[0], tokenized[1:]))
             global codeblocksize
             codeblocksize = codeblocksize + instructions[-1].size
-    
+
     # Generate addresses for variables.
     variable: Variable
     for variable in variables:
@@ -208,6 +302,8 @@ def assemble(inputfilename: str, outfilename: str):
     outfile.write("v2.0 raw\n")
     outfile.write(outcontent)
     outfile.close()
+
+# Program entrypoint is here.
 
 if len(sys.argv) < 3:
     print("Please at least enter 1 input and 1 output file name.")
