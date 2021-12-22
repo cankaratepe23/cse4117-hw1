@@ -3,7 +3,7 @@ import os
 import sys
 import webbrowser
 
-opcodeshiftleftamount = 12
+OPCODE_SHIFT_LEFT_AMOUNT = 12
 definedinstructions = {"ldi": 1, "inc": 7, "dec": 7, "mov": 7, "not": 7, "add": 7,
                        "sub": 7, "and": 7, "or": 7, "xor": 7, "ld": 2, "st": 3, "jmp": 5, "jz": 4,
                        "push": 10, "pop": 11, "call": 12, "ret": 13}
@@ -90,17 +90,17 @@ def testoutput(filename: str, referencefilename: str, display=False):
     This function uses the difflib module.
     """
 
-    referencefile = open(referencefilename)
+    referencefile = open(referencefilename, encoding="utf-8")
     referencecontent = referencefile.readlines()
     referencefile.close()
 
-    sourcefile = open(filename)
+    sourcefile = open(filename, encoding="utf-8")
     sourcecontent = sourcefile.readlines()
     sourcefile.close()
 
     htmldiff = difflib.HtmlDiff()
     htmlname = filename + "-diff.html"
-    with open(htmlname, "w") as htmlfile:
+    with open(htmlname, "w", encoding="utf-8") as htmlfile:
         htmlfile.writelines(htmldiff.make_file(
             fromlines=referencecontent, tolines=sourcecontent, fromdesc="Reference", todesc="Program Output"))
     if display:
@@ -174,7 +174,7 @@ def gethexinstruction(instruction: Instruction):
     # An instruction line consists of an opcode and any arguments.
     # Any addition should be made by bit-shifting the value,
     # and OR'ing with the existing instruction line.
-    instructionline_1 = definedinstructions[operation] << opcodeshiftleftamount
+    instructionline_1 = definedinstructions[operation] << OPCODE_SHIFT_LEFT_AMOUNT
     # This line is for 32-bit instructions only.
     instructionline_2 = 0
     if operation == "ldi" or operation == "pop":
@@ -231,7 +231,7 @@ def assemble(inputfilename: str, outfilename: str):
     readingdata: bool = False
     readingcode: bool = False
 
-    sourcefile = open(inputfilename)
+    sourcefile = open(inputfilename, encoding="utf-8")
     sourcecontent = sourcefile.readlines()
     sourcefile.close()
 
@@ -267,11 +267,9 @@ def assemble(inputfilename: str, outfilename: str):
                 # Reading a single variable assignment
                 variables.append(
                     Variable(varname, False, int(tokenized[1], 0)))
-                pass
             elif len(tokenized) == 3 and tokenized[1] == ".space":
                 # Reading a .space variable assignment
                 variables.append(Variable(varname, True, int(tokenized[2], 0)))
-                pass
         elif readingcode:
             if haslabel:
                 instructions.append(Instruction(tokenized[1], tokenized[2:], tokenized[0]))
@@ -298,7 +296,7 @@ def assemble(inputfilename: str, outfilename: str):
     for variable in variables:
         outcontent = outcontent + gethexvariable(variable) + "\n"
 
-    outfile = open(outfilename, "w")
+    outfile = open(outfilename, "w", encoding="utf-8")
     outfile.write("v2.0 raw\n")
     outfile.write(outcontent)
     outfile.close()
@@ -309,6 +307,6 @@ if len(sys.argv) < 3:
     print("Please at least enter 1 input and 1 output file name.")
     exit(-1)
 
-infilename = sys.argv[1]
-outfilename = sys.argv[2]
-assemble(infilename, outfilename)
+usrinfilename = sys.argv[1]
+usroutfilename = sys.argv[2]
+assemble(usrinfilename, usroutfilename)
