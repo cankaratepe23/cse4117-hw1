@@ -5,8 +5,7 @@
 *.out
 *.exe
 *.html
-sample*.ram
-terms*.ram
+*.ram
 
 assembler
 
