@@ -6,7 +6,7 @@ import webbrowser
 OPCODE_SHIFT_LEFT_AMOUNT = 12
 definedinstructions = {"ldi": 1, "inc": 7, "dec": 7, "mov": 7, "not": 7, "add": 7,
                        "sub": 7, "and": 7, "or": 7, "xor": 7, "ld": 2, "st": 3, "jmp": 5, "jz": 4,
-                       "push": 10, "pop": 11, "call": 12, "ret": 13}
+                       "push": 8, "pop": 9, "call": 10, "ret": 11}
 alucodes = {"inc": 58, "dec": 59, "mov": 57, "not": 56, "add": 0, "sub": 1, "and": 2, "or": 3, "xor": 4 }
 instructions = []
 variables = []
@@ -177,7 +177,7 @@ def gethexinstruction(instruction: Instruction):
     instructionline_1 = definedinstructions[operation] << OPCODE_SHIFT_LEFT_AMOUNT
     # This line is for 32-bit instructions only.
     instructionline_2 = 0
-    if operation == "ldi" or operation == "pop":
+    if operation == "ldi":
         #                                         r
         instructionline_1 = instructionline_1 | args[0]
         #                     x
@@ -197,7 +197,7 @@ def gethexinstruction(instruction: Instruction):
     elif operation == "st":
         #                                               r2              r1
         instructionline_1 = instructionline_1 | (args[1] << 6) | (args[0] << 3)
-    elif operation == "jmp" or operation == "jz" or operation == "call":
+    elif operation == "jmp" or operation == "jz" or operation == "call" or operation == "pop":
         #                                         x
         instructionline_1 = instructionline_1 | args[0]
     elif operation == "push":
@@ -304,9 +304,13 @@ def assemble(inputfilename: str, outfilename: str):
 # Program entrypoint is here.
 
 if len(sys.argv) < 3:
-    print("Please at least enter 1 input and 1 output file name.")
-    exit(-1)
+    usrinfilename = input("Enter input filename:")
+    usroutfilename = input("Enter output filename:")
+    if not usrinfilename or not usroutfilename:
+        print("Please at least enter 1 input and 1 output file name.")
+        exit(-1)
+else:
+    usrinfilename = sys.argv[1]
+    usroutfilename = sys.argv[2]
 
-usrinfilename = sys.argv[1]
-usroutfilename = sys.argv[2]
 assemble(usrinfilename, usroutfilename)
