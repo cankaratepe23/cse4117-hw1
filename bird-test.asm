@@ -17,4 +17,5 @@
                 jmp exit
 exit            jmp exit
 push_to_stack   push 1
+                pop 3
                 ret
