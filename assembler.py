@@ -304,9 +304,13 @@ def assemble(inputfilename: str, outfilename: str):
 # Program entrypoint is here.
 
 if len(sys.argv) < 3:
-    print("Please at least enter 1 input and 1 output file name.")
-    exit(-1)
+    usrinfilename = input("Enter input filename:")
+    usroutfilename = input("Enter output filename:")
+    if not usrinfilename or not usroutfilename:
+        print("Please at least enter 1 input and 1 output file name.")
+        exit(-1)
+else:
+    usrinfilename = sys.argv[1]
+    usroutfilename = sys.argv[2]
 
-usrinfilename = sys.argv[1]
-usroutfilename = sys.argv[2]
 assemble(usrinfilename, usroutfilename)
