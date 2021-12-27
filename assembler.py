@@ -177,7 +177,7 @@ def gethexinstruction(instruction: Instruction):
     instructionline_1 = definedinstructions[operation] << OPCODE_SHIFT_LEFT_AMOUNT
     # This line is for 32-bit instructions only.
     instructionline_2 = 0
-    if operation == "ldi" or operation == "pop":
+    if operation == "ldi":
         #                                         r
         instructionline_1 = instructionline_1 | args[0]
         #                     x
@@ -197,7 +197,7 @@ def gethexinstruction(instruction: Instruction):
     elif operation == "st":
         #                                               r2              r1
         instructionline_1 = instructionline_1 | (args[1] << 6) | (args[0] << 3)
-    elif operation == "jmp" or operation == "jz" or operation == "call":
+    elif operation == "jmp" or operation == "jz" or operation == "call" or operation == "pop":
         #                                         x
         instructionline_1 = instructionline_1 | args[0]
     elif operation == "push":
