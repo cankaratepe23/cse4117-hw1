@@ -140,11 +140,14 @@ def findlabelorvariable(label: str, sourceinstruction: Instruction):
     instruction: Instruction
     for instruction in instructions:
         if instruction.strlabel and instruction.strlabel == label:
-            reloffset = instruction.address - sourceinstruction.address - 1
-            if reloffset >= 0:
-                return reloffset
-            else:
-                return twoscomplement(reloffset)
+            if sourceinstruction.strop == "jmp" or sourceinstruction.strop == "jz":
+                return instruction.address
+            elif sourceinstruction.strop == "call":
+                reloffset = instruction.address - sourceinstruction.address - 1
+                if reloffset >= 0:
+                    return reloffset
+                else:
+                    return twoscomplement(reloffset)
     variable: Variable
     for variable in variables:
         if variable.name == label:
