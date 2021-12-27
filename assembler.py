@@ -7,6 +7,7 @@ OPCODE_SHIFT_LEFT_AMOUNT = 12
 definedinstructions = {"ldi": 1, "inc": 7, "dec": 7, "mov": 7, "not": 7, "add": 7,
                        "sub": 7, "and": 7, "or": 7, "xor": 7, "ld": 2, "st": 3, "jmp": 5, "jz": 4,
                        "push": 8, "pop": 9, "call": 10, "ret": 11}
+dwordinstructions = ["ldi", "jmp", "jz"]
 alucodes = {"inc": 58, "dec": 59, "mov": 57, "not": 56, "add": 0, "sub": 1, "and": 2, "or": 3, "xor": 4 }
 instructions = []
 variables = []
@@ -63,7 +64,7 @@ class Instruction:
     address: int
         The address of the instruction. Initialized to the size of the code block at init.
     size: int
-        The size of the instruction. The only 2 byte instruction is ldi, all the rest are 1.
+        The size of the instruction.
     """
 
     def __init__(self, strop, strargs, strlabel=None):
@@ -73,7 +74,7 @@ class Instruction:
         self.opcode: int = definedinstructions[strop]
         self.address: int = codeblocksize
         self.strlabel: str = strlabel
-        if self.strop == "ldi":
+        if self.strop in dwordinstructions:
             self.size = 2
         else:
             self.size = 1
@@ -182,6 +183,9 @@ def gethexinstruction(instruction: Instruction):
         instructionline_1 = instructionline_1 | args[0]
         #                     x
         instructionline_2 = args[1]
+    elif operation == "jmp" or operation == "jz":
+        #                     x
+        instructionline_2 = args[0]
     elif operation == "inc" or operation == "dec":
         #                                                ALU CODE                    r1         r1
         instructionline_1 = instructionline_1 | (alucodes[operation] << 6) | (args[0] << 3) | args[0]
@@ -197,7 +201,7 @@ def gethexinstruction(instruction: Instruction):
     elif operation == "st":
         #                                               r2              r1
         instructionline_1 = instructionline_1 | (args[1] << 6) | (args[0] << 3)
-    elif operation == "jmp" or operation == "jz" or operation == "call" or operation == "pop":
+    elif operation == "call" or operation == "pop":
         #                                         x
         instructionline_1 = instructionline_1 | args[0]
     elif operation == "push":
@@ -210,7 +214,7 @@ def gethexinstruction(instruction: Instruction):
         raise ValueError("Unkown operation " + operation +
                          " was passed to the method.")
 
-    return f'{instructionline_1:0>4x}' + ("\n" + f'{instructionline_2:0>4x}' if operation == "ldi" else "")
+    return f'{instructionline_1:0>4x}' + ("\n" + f'{instructionline_2:0>4x}' if operation in dwordinstructions else "")
 
 def assemble(inputfilename: str, outfilename: str):
     """Reads from given text file inputfilename, and writes output to outfilename as machine code.
