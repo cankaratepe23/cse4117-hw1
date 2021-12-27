@@ -3,6 +3,7 @@
                 one: 1
                 two: 2
 .code
+                push 0
                 ldi 0 zero
                 ld 0 0
                 ldi 1 one
