@@ -202,7 +202,7 @@ def gethexinstruction(instruction: Instruction):
         instructionline_1 = instructionline_1 | args[0]
     elif operation == "push":
         #                                               r
-        instructionline_1 = instructionline_1 | (args[0] << 3)
+        instructionline_1 = instructionline_1 | (args[0] << 6)
     elif operation == "ret": # This line is needed to avoid exceptions.
         # d
         pass
