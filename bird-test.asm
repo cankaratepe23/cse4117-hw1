@@ -12,8 +12,6 @@
                 ldi 1 two
                 ld 1 1
                 call push_to_stack
-                pop 2
-                pop 2
                 jmp exit
 exit            jmp exit
 push_to_stack   push 1
