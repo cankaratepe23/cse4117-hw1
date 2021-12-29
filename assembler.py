@@ -250,7 +250,7 @@ def assemble(inputfilename: str, outfilename: str):
         line = srcline
         if "//" in line:
             line = srcline.split("//")[0]
-        if line.isspace():
+        if not line or line.isspace():
             continue
 
         haslabel: bool = False
