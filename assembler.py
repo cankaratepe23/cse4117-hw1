@@ -195,7 +195,7 @@ def gethexinstruction(instruction: Instruction):
     elif operation == "mov" or operation == "not":
         #                                                ALU CODE                    r2         r1
         instructionline_1 = instructionline_1 | (alucodes[operation] << 6) | (args[1] << 3) | args[0]
-    elif operation == "add" or operation == "sub" or operation == "and" or operation == "xor":
+    elif operation == "add" or operation == "sub" or operation == "and" or operation == "or" or operation == "xor":
         #                                                ALU CODE                    r2             r3           r1
         instructionline_1 = instructionline_1 | (alucodes[operation] << 9) | (args[1] << 6) | (args[2] << 3) | args[0]
     elif operation == "ld":
