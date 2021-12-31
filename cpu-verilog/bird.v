@@ -3,7 +3,7 @@ module bird (
 		input clk,
 		input [15:0] data_in,
 		output reg [15:0] data_out,
-		output reg [11:0] address,
+		output reg [15:0] address,
 		output memwt
 		);
  
@@ -67,7 +67,7 @@ always @(posedge clk)
  
 		JMP:
 			begin
-				pc <= pc+ir;
+				pc <= data_in;
 				state <= FETCH;  
 			end
  
@@ -86,27 +86,33 @@ always @(posedge clk)
  
 		POP1:
 			begin
-				//to be added
+				regbank[7]<=regbank[7]+1;
+				state <= POP2;
 			end
  
 		POP2: 
 			begin
-				//to be added
+				regbank[ir[2:0]]<=data_in;
+				state <= FETCH;
 			end
  
 		CALL: 
 			begin
-			        //to be added 
+			        pc <= pc+ir;
+					regbank[7]<=regbank[7]-1;
+					state <= FETCH;
 			end
  
 		RET1:
 			begin
-				//to be added
+				regbank[7]<=regbank[7]+1;
+				state <= RET2;
 			end
  
 		RET2:
 			begin
-				//to be added 
+				pc<=data_in;
+				state <= FETCH;
 			end
  
 	endcase
@@ -116,18 +122,18 @@ always @*
 		LD:	address=regbank[ir[5:3]][11:0];
 		ST:	address=regbank[ir[5:3]][11:0];
 		PUSH:	address=regbank[7];
-		POP2:	//to be added
-		CALL:	//to be added
-		RET2:	//to be added
+		POP2:	address=regbank[7];
+		CALL:	address=regbank[7];
+		RET2:	address=regbank[7];
 		default: address=pc;
 	endcase
  
  
-assign memwt=(state==ST)|| // to be added
+assign memwt=(state==ST)|| (state==PUSH)|| (state==CALL);
  
 always @*
 	case (state)
-		CALL: data_out = //to be added 
+		CALL: data_out = pc;
 		default: data_out = regbank[ir[8:6]];
 	endcase
  
