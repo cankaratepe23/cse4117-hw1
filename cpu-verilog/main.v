@@ -1,7 +1,7 @@
 //Main module
 
 
-module main_module (
+module main (
 			output wire [3:0] rowwrite,
 			input [3:0] colread,
 			input clk,
@@ -28,15 +28,15 @@ reg [15:0] memory [0:127];
 // cpu's input-output pins
 wire [15:0] data_out;
 reg [15:0] data_in;
-wire [11:0] address;
+wire [15:0] address;
 wire memwt;
 
 
-sevensegment ss1 (//to be added);
+seven_segment_display ss1 (data_all, grounds, display, clk);
 
-keypad  kp1(//to be added);
+keypad  kp1(rowwrite,colread,clk,ack,statusordata,keyout);
 
-bird br1 (//to be added);
+bird br1 (clk, data_in, data_out, address, memwt);
 
 
 //multiplexer for cpu input
