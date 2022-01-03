@@ -23,7 +23,7 @@ localparam	BEGINMEM=16'h000,
 		KEYPAD=16'h900,
 		SEVENSEG=16'hb00;
 //  memory chip
-reg [15:0] memory [0:4095]; 
+reg [15:0] memory [0:255]; 
 
 // cpu's input-output pins
 wire [15:0] data_out;
