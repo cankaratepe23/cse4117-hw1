@@ -55,7 +55,9 @@ always @*
 		end
 	else if (address==KEYPAD)
 		begin
-			//to be added 
+			statusordata=0;
+			data_in=keyout;
+			ack=1;
 		end
 	else
 		begin
