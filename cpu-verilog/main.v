@@ -18,13 +18,13 @@ reg ack;
 reg statusordata;
 
 //memory map is defined here
-localparam	BEGINMEM=12'h000,
-		ENDMEM=12'h1ff,
-		KEYPAD=12'h900,
-		SEVENSEG=12'hb00;
+localparam	BEGINMEM=16'h000,
+		ENDMEM=16'h1ff,
+		KEYPAD=16'h900,
+		SEVENSEG=16'hb00;
 //  memory chip
-reg [15:0] memory [0:127]; 
- 
+reg [15:0] memory [0:4095]; 
+
 // cpu's input-output pins
 wire [15:0] data_out;
 reg [15:0] data_in;
