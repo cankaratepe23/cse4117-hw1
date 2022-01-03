@@ -7,7 +7,8 @@ module bird (
 		output memwt
 		);
  
-reg [11:0] pc, ir; //program counter, instruction register
+reg [15:0] pc; //program counter
+reg [11:0] ir; // instruction register
  
 reg [4:0] state; //FSM
 reg [15:0] regbank [7:0];//registers 
