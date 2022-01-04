@@ -18,10 +18,12 @@ reg ack;
 reg statusordata;
 
 //memory map is defined here
-localparam	BEGINMEM=16'h000,
-		ENDMEM=16'h1ff,
-		KEYPAD=16'h900,
-		SEVENSEG=16'hb00;
+localparam	BEGINMEM1=16'h0000,
+		ENDMEM1=16'hcfff,
+		KEYPAD=16'hd000,
+		SEVENSEG=16'hd002,
+		BEGINMEM2=16'hf000,
+		ENDMEM2=16'hffff;
 //  memory chip
 reg [15:0] memory [0:255]; 
 
@@ -41,7 +43,7 @@ bird br1 (clk, data_in, data_out, address, memwt);
 
 //multiplexer for cpu input
 always @*
-	if ( (BEGINMEM<=address) && (address<=ENDMEM) )
+	if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
 		begin
 			data_in=memory[address];
 			ack=0;
@@ -70,7 +72,7 @@ always @*
 
 always @(posedge clk) //data output port of the cpu
 	if (memwt)
-		if ( (BEGINMEM<=address) && (address<=ENDMEM) )
+		if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
 			memory[address]<=data_out;
 		else if ( SEVENSEG==address) 
 			data_all<=data_out;
