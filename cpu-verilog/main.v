@@ -25,11 +25,12 @@ localparam	BEGINMEM1=16'h0000,
 		BEGINMEM2=16'hf000,
 		ENDMEM2=16'hffff;
 //  memory chip
-reg [15:0] memory [0:255]; 
+reg [15:0] memory [0:32768]; 
 
 // cpu's input-output pins
 wire [15:0] data_out;
 reg [15:0] data_in;
+reg  [15:0] mem_out;
 wire [15:0] address;
 wire memwt;
 
@@ -45,7 +46,7 @@ bird br1 (clk, data_in, data_out, address, memwt);
 always @*
 	if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
 		begin
-			data_in=memory[address];
+			data_in=mem_out;
 			ack=0;
 			statusordata=0;
 		end
@@ -70,12 +71,16 @@ always @*
 
 //multiplexer for cpu output 
 
-always @(posedge clk) //data output port of the cpu
+always @(posedge clk) begin //data output port of the cpu
 	if (memwt)
-		if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
-			memory[address]<=data_out;
-		else if ( SEVENSEG==address) 
-			data_all<=data_out;
+		begin
+			if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
+				memory[address]<=data_out;
+			else if ( SEVENSEG==address) 
+				data_all<=data_out;
+		end
+	mem_out <= memory[address];
+end
 
 
 initial 
