@@ -157,10 +157,11 @@ always @* //ALU Operation
  
 assign zeroresult = ~|result;
  
-initial begin;
-	state=FETCH;
-	zeroflag=0;
-	pc=0;
-end
+initial 
+	begin
+		state=FETCH;
+		zeroflag=0;
+		pc=0;
+	end
  
 endmodule

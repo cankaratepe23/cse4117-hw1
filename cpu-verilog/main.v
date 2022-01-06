@@ -4,6 +4,7 @@
 module main (
 			output wire [3:0] rowwrite,
 			input [3:0] colread,
+			output reg [7:0] leds,
 			input clk,
 			output wire [3:0] grounds,
 			output wire [6:0] display,
@@ -33,16 +34,18 @@ reg [15:0] data_in;
 reg  [15:0] mem_out;
 wire [15:0] address;
 wire memwt;
+reg [15:0] ssss;
 
 
-seven_segment_display ss1 (data_all, grounds, display, clk);
+seven_segment_display ss1 (keyout, grounds, display, clk);
 
 keypad  kp1(rowwrite,colread,clk,ack,statusordata,keyout);
 
 bird br1 (clk, data_in, data_out, address, memwt);
 
 
-//multiplexer for cpu input
+//multiplexer for cpu input7
+/*
 always @*
 	if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
 		begin
@@ -68,7 +71,7 @@ always @*
 			ack=0;
 			statusordata=0;
 		end
-
+*/
 //multiplexer for cpu output 
 
 always @(posedge clk) begin //data output port of the cpu
@@ -82,13 +85,26 @@ always @(posedge clk) begin //data output port of the cpu
 	mem_out <= memory[address];
 end
 
+always @*
+	begin
+		leds[0] <= rowwrite[0];
+		leds[1] <= rowwrite[1];
+		leds[2] <= rowwrite[2];
+		leds[3] <= rowwrite[3];
+		ssss <= {8'b0, colread, rowwrite};
+	end
+	
+always @(posedge pushbutton)
+	begin
+	leds[4] <= ~leds[4];
+	end
 
 initial 
 	begin
 		data_all=0;
 		ack=0;
 		statusordata=0;
-		$readmemh("ram.dat", memory);
+		$readmemh("ram.ram", memory);
 	end
 
 endmodule
