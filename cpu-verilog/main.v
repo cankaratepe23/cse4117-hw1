@@ -1,7 +1,7 @@
 //Main module
 
 
-module main_module (
+module main (
 			output wire [3:0] rowwrite,
 			input [3:0] colread,
 			input clk,
@@ -18,32 +18,35 @@ reg ack;
 reg statusordata;
 
 //memory map is defined here
-localparam	BEGINMEM=12'h000,
-		ENDMEM=12'h1ff,
-		KEYPAD=12'h900,
-		SEVENSEG=12'hb00;
+localparam	BEGINMEM1=16'h0000,
+		ENDMEM1=16'hcfff,
+		KEYPAD=16'hd000,
+		SEVENSEG=16'hd002,
+		BEGINMEM2=16'hf000,
+		ENDMEM2=16'hffff;
 //  memory chip
-reg [15:0] memory [0:127]; 
- 
+reg [15:0] memory [0:32768]; 
+
 // cpu's input-output pins
 wire [15:0] data_out;
 reg [15:0] data_in;
-wire [11:0] address;
+reg  [15:0] mem_out;
+wire [15:0] address;
 wire memwt;
 
 
-sevensegment ss1 (//to be added);
+seven_segment_display ss1 (data_all, grounds, display, clk);
 
-keypad  kp1(//to be added);
+keypad  kp1(rowwrite,colread,clk,ack,statusordata,keyout);
 
-bird br1 (//to be added);
+bird br1 (clk, data_in, data_out, address, memwt);
 
 
 //multiplexer for cpu input
 always @*
-	if ( (BEGINMEM<=address) && (address<=ENDMEM) )
+	if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
 		begin
-			data_in=memory[address];
+			data_in=mem_out;
 			ack=0;
 			statusordata=0;
 		end
@@ -55,7 +58,9 @@ always @*
 		end
 	else if (address==KEYPAD)
 		begin
-			//to be added 
+			statusordata=0;
+			data_in=keyout;
+			ack=1;
 		end
 	else
 		begin
@@ -66,12 +71,16 @@ always @*
 
 //multiplexer for cpu output 
 
-always @(posedge clk) //data output port of the cpu
+always @(posedge clk) begin //data output port of the cpu
 	if (memwt)
-		if ( (BEGINMEM<=address) && (address<=ENDMEM) )
-			memory[address]<=data_out;
-		else if ( SEVENSEG==address) 
-			data_all<=data_out;
+		begin
+			if ( ((BEGINMEM1<=address) && (address<=ENDMEM1)) || ((BEGINMEM2<=address) && (address<=ENDMEM2)) )
+				memory[address]<=data_out;
+			else if ( SEVENSEG==address) 
+				data_all<=data_out;
+		end
+	mem_out <= memory[address];
+end
 
 
 initial 
