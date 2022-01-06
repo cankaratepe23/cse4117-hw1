@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE22F17) Path("C:/Users/xParadokSx/Desktop/Work/School/Semester 7/CSE4117/Homeworks/HW1/project/cpu-verilog/output_files/") File("cpu.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE22F17) Path("C:/Users/xParadokSx/Desktop/Work/School/Semester 7/CSE4117/Homeworks/project/cpu-verilog/output_files/") File("cpu.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 
