@@ -3,7 +3,8 @@
                                 // keypad: 0xd000
                                 // keypad_ready: 0xd001
                                 // segment_disp: 0xd002
-.code           push 0          // initialize stack
+.code           
+                push 0          // initialize stack
 start           call poll_and_read
                 call write_display
                 // check if # or * or A
