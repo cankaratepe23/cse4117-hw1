@@ -308,7 +308,8 @@ def assemble(inputfilename: str, outfilename: str):
         outcontent = outcontent + gethexvariable(variable) + "\n"
 
     outfile = open(outfilename, "w", encoding="utf-8")
-    outfile.write("v2.0 raw\n")
+    if not outfilename.endswith(".dat"):
+        outfile.write("v2.0 raw\n")
     outfile.write(outcontent)
     outfile.close()
 
