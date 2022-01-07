@@ -2,6 +2,7 @@
                 zero: 0
                 // * = 0x000E
                 // # = 0x000F
+                // A = 0x000A
 .code
                 push 0              // initialize stack
 start           call poll_and_read  // read a character
@@ -17,6 +18,9 @@ start           call poll_and_read  // read a character
                 ldi 2 0x000f
                 sub 0 1 2           // if entered key is 0xf
                 jz sum_op           // go to addition
+                ldi 2 0x000a
+                sub 0 1 2           // if entered key is 0xa
+                jz rst_op           // go to addition
                 //// default case, a new digit is entered:
                 mov 1 5             // prepare to mult the previous number by 10
                 ldi 2 10
@@ -41,6 +45,16 @@ mul_op          mov 1 6
                 ldi 5 0
                 jmp start
 
+rst_op          ldi 0 0
+                ldi 1 0
+                ldi 2 0
+                ldi 3 0
+                ldi 4 0
+                ldi 5 0
+                ldi 6 0
+                call write_display
+                jmp start
+                
 // mult: reg0 = reg1 * reg2
 // value of reg0 is NOT preserved
 mult                push 1
