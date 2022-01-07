@@ -85,7 +85,7 @@ always @(posedge clk) begin //data output port of the cpu
 			else if ( SEVENSEG==mapped_address) 
 				data_all<=data_out;
 		end
-	//mem_out<=memory[mapped_address];
+	//mem_out=memory[mapped_address];
 end
 
 /*
