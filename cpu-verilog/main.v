@@ -21,10 +21,10 @@ reg sram_ld;
 
 //memory map is defined here
 localparam	BEGINMEM1=16'h0000,
-		ENDMEM1=16'h00CF,
-		KEYPAD=16'h00D0,
-		SEVENSEG=16'h00D2,
-		BEGINMEM2=16'h00D3,
+		ENDMEM1=16'h00DE,
+		KEYPAD=16'h00DF,
+		SEVENSEG=16'h00E1,
+		BEGINMEM2=16'h00E2,
 		ENDMEM2=16'h0100;
 //  memory chip
 reg [15:0] memory [0:255];
