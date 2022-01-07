@@ -30,6 +30,7 @@ start           call poll_and_read  // read a character
 sum_op          add 6 5 6           // reg6 contains the entire operation result
                 mov 0 6
                 call write_display
+                ldi 5 0
                 jmp start
 
 mul_op          mov 1 6
@@ -37,6 +38,7 @@ mul_op          mov 1 6
                 call mult
                 mov 6 0
                 call write_display
+                ldi 5 0
                 jmp start
 
 // mult: reg0 = reg1 * reg2
