@@ -25,8 +25,19 @@ start           call poll_and_read  // read a character
                 mov 5 0             // the current number resides in reg0 and reg5
                 call write_display
                 jmp start           // continue polling
-sum_op          push 0              // placeholder
-mul_op          push 0              // placeholder         
+                
+                // put the current number (in reg5) into another register, and read the second operand.
+sum_op          add 6 5 6           // reg6 contains the entire operation result
+                mov 0 6
+                call write_display
+                jmp start
+
+mul_op          mov 1 6
+                mov 2 5
+                call mult
+                mov 6 0
+                call write_display
+                jmp start
 
 // mult: reg0 = reg1 * reg2
 // value of reg0 is NOT preserved
@@ -131,7 +142,7 @@ bcd                 push 1
 // Register 0 is written to 7 segment display
 write_display   push 1
                 ldi 1 0x00E1    // 7 segment address
-                call bcd
+                // call bcd
                 st 1 0          // write value to 7 segment
                 pop 1
                 ret
