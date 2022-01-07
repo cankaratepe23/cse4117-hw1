@@ -257,10 +257,14 @@ def assemble(inputfilename: str, outfilename: str):
         tokenized = line.split()
 
         if tokenized[0] == ".data":
+            if len(tokenized) != 1:
+                raise RuntimeError("You have written code on the same line as the .data section header. THIS IS NOT ALLOWED!\n" + str(tokenized))
             readingdata = True
             readingcode = False
             continue
         elif tokenized[0] == ".code":
+            if len(tokenized) != 1:
+                raise RuntimeError("You have written code on the same line as the .code section header. THIS IS NOT ALLOWED!\n" + str(tokenized))
             readingdata = False
             readingcode = True
             continue
