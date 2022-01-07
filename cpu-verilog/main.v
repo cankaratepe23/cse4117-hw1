@@ -38,13 +38,15 @@ wire [15:0] mapped_address;
 wire memwt;
 reg [15:0] ssss;
 
+wire [15:0] sp;
+
 assign mapped_address = (address > 16'h0100) ? 16'h0100 - (16'hFFFF - address) : address;
 
 seven_segment_display ss1 (data_all, grounds, display, clk);
 
 keypad  kp1(rowwrite,colread,clk,ack,statusordata,keyout);
 
-bird br1 (clk, data_in, data_out, address, memwt);
+bird br1 (clk, data_in, data_out, address, sp, memwt);
 
 
 //multiplexer for cpu input7
@@ -88,24 +90,18 @@ always @(posedge clk) begin //data output port of the cpu
 	//mem_out=memory[mapped_address];
 end
 
-/*
+
 always @*
 	begin
-		leds[0] <= rowwrite[0];
-		leds[1] <= rowwrite[1];
-		leds[2] <= rowwrite[2];
-		leds[3] <= rowwrite[3];
-		ssss <= {8'b0, colread, rowwrite};
+		if (sp <= 16'h00E1 && sp != 16'h0000)
+			leds[0] <= 1;
 	end
 	
-always @(posedge pushbutton)
-	begin
-	leds[4] <= ~leds[4];
-	end
-*/
-
+	
+	
 initial 
 	begin
+		leds=0;
 		data_all=0;
 		ack=0;
 		statusordata=0;

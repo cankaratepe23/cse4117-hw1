@@ -4,6 +4,7 @@ module bird (
 		input [15:0] data_in,
 		output reg [15:0] data_out,
 		output reg [15:0] address,
+		output reg [15:0] sp,
 		output memwt
 		);
  
@@ -32,7 +33,8 @@ localparam	FETCH=4'b0000,
  
  
 wire zeroresult; 
-	
+
+always @* sp = regbank[7];
 
 always @(posedge clk)
 	case(state) 
