@@ -32,7 +32,8 @@ localparam	FETCH=4'b0000,
  
  
 wire zeroresult; 
- 
+	
+
 always @(posedge clk)
 	case(state) 
 		FETCH: 
@@ -99,7 +100,7 @@ always @(posedge clk)
  
 		CALL: 
 			begin
-			        pc <= pc+ir;
+			      pc <= pc+ir;
 					regbank[7]<=regbank[7]-1;
 					state <= FETCH;
 			end
