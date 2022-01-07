@@ -72,6 +72,7 @@ shl_return          pop 2
 // div: reg0 = reg1 / reg2 (integer division) & reg3 = remainder
 // values of reg0 and reg3 are NOT preserved
 div                 push 1
+                    push 2
                     push 4
                     push 5
                     push 6
@@ -88,12 +89,16 @@ div_loop            mov 3 1         // reg3 = reg1
                     pop 6
                     pop 5
                     pop 4
+                    pop 2
                     pop 1
                     ret
 
 // bcd: converts integer value given in reg0, inplace, to its BCD value.
 bcd                 push 1
                     push 2
+                    push 3
+                    push 4
+                    push 5
                     push 6
                     
                     mov 1 0
@@ -124,6 +129,9 @@ bcd                 push 1
 
                     mov 0 6         // return value in reg6
                     pop 6
+                    pop 5
+                    pop 4
+                    pop 3
                     pop 2
                     pop 1
                     ret
