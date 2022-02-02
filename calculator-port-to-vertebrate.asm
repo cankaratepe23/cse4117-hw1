@@ -7,14 +7,14 @@
 .code
                     push 0              // initialize stack
                     ldi 0 0             // reg0 = 0
-                    call poll_setup
+                    call poll_setup     // reg1 = 1; reg2 = 0xd000
 poll                ld 5 2              // reg5 = (value from push_button_1)
-                    sub 0 1 0
-                    jz add_switchboards
-                    jmp poll
+                    sub 5 1 5           // reg5 = reg5 - 1;
+                    jz add_switchboards // jump if reg5 was 1
+                    jmp poll            // continue polling if not
 add_switchboards    ldi 5 0xd001        // reg5 = 0xd001
                     ld 5 5              // reg5 = (value from switchboard_1)
-                    ldi 0 0xd002
+                    ldi 0 0xd002        // reg0 = 0xd001
                     ld 0 0              // reg0 = (value from switchboard_2)
                     add 0 0 5           // reg0 = reg0 + reg5
                     ldi 5 0xd003        // reg5 = 0xd003
@@ -22,18 +22,17 @@ add_switchboards    ldi 5 0xd001        // reg5 = 0xd001
                     call bcd
                     st 5 0              // (7-segment display) = reg0
                     pop 0
-                    jmp wait_pb_1
 wait_pb_1           ldi 1 1             // reg1 = 1
                     ldi 2 0xd000        // reg2 = 0xd000
                     ld 5 2              // reg5 = (value from push_button_1)
                     sub 5 1 5
-                    jz wait_pb_1
+                    jz wait_pb_1        // continue waiting if reg5 was 1
                     call poll_setup
-                    jmp poll
+                    jmp poll            // start polling if not
 
 
-// poll_setup: reg1, reg2, and reg3 are setup to the appropriate constants for polling
-// values of reg1, reg2, and reg3 are NOT preserved
+// poll_setup: reg1 and reg2 are setup to the appropriate constants for polling
+// values of reg1 and reg2 are NOT preserved
 poll_setup          ldi 1 1             // reg1 = 1
                     ldi 2 0xd000        // reg2 = 0xd000
                     ret
