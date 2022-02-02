@@ -99,7 +99,6 @@ bcd                 push 1
                     push 3
                     push 4
                     push 5
-                    push 6
                     
                     mov 1 0
                     ldi 2 1000
@@ -107,28 +106,27 @@ bcd                 push 1
 
                     ldi 1 12
                     call shl
-                    mov 6 0
+                    mov 5 0
 
                     mov 1 3
                     ldi 2 100
                     call div        // reg0 = reg3 / 100 && reg3 = reg3 % 100
 
                     ldi 1 8
-                    call shl        // 8-bit shift the remainder from prev. operation)
-                    or 6 6 0        // store the bit-shifted result of division in reg6
+                    call shl        // 8-bit shift the result from prev. operation)
+                    or 5 5 0        // store the bit-shifted result of division in reg6
 
                     mov 1 3
                     ldi 2 10
                     call div        // reg0 = reg3 / 10 && reg3 = reg3 % 10
 
                     ldi 1 4
-                    call shl        // 4-bit shift the remainder from prev. operation)
-                    or 6 6 0        // store the bit-shifted result of division in reg6
+                    call shl        // 4-bit shift the result from prev. operation)
+                    or 5 5 0        // store the bit-shifted result of division in reg6
 
-                    or 6 6 3        // store the final nibble in reg6
+                    or 5 5 3        // store the final nibble in reg6
 
-                    mov 0 6         // return value in reg6
-                    pop 6
+                    mov 0 5         // return value in reg5
                     pop 5
                     pop 4
                     pop 3
