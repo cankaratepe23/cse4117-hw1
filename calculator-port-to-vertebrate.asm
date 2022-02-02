@@ -84,7 +84,9 @@ div                 push 1
 div_loop            mov 3 1         // reg3 = reg1
                     add 0 0 5       // reg0++
                     sub 1 1 2       // reg1 = reg1 - reg2
+                    push 5
                     and 5 1 4       // ZF is set if 0 is positive. reg5 is a discard register
+                    pop 5
                     jz div_loop
 
                     pop 5
