@@ -6,7 +6,7 @@
         // segment_disp: 0xd003
         // timer_time_val: 0xd004
         // timer_disp: 0xd005
-        // PIC_mask: 0xd00d
+        // PIC_mask: 0xd006
         // Interrupt Table start: 0xe000
 .code
                     push 0              // initialize stack
@@ -39,7 +39,15 @@ wait_pb_1           ldi 1 1             // reg1 = 1
                     jmp poll            // start polling if not
 
 
-isr1    ldi 0 3131
+isr1    ldi 0 0xd006
+        ldi 1 0x0001
+        st 0 1
+        ldi 0 0xd004
+        ld 0 0
+        sti
+        call bcd
+        ldi 1 0xd005
+        st 1 0
 exit    jmp exit
         ret
 
