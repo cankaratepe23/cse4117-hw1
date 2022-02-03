@@ -1,6 +1,4 @@
 //Main module
-
-
 module main (
 			output wire [3:0] rowwrite,
 			input [3:0] colread,
@@ -8,49 +6,51 @@ module main (
 			input clk,
 			output wire [3:0] grounds,
 			output wire [6:0] display,
-			input pushbutton //may be used as clock
+			input push_button
 			);
 
 reg [15:0] data_all;
 wire [3:0] keyout;
-reg [25:0] clk1;
-reg [1:0] ready_buffer;
+
 reg ack;
 reg statusordata;
-reg sram_ld;
 
-//memory map is defined here
+reg timer_ack;
+reg timer_out_select;
+wire [15:0] timer_out;
+
+//	memory map is defined here
 localparam	BEGINMEM1=16'h0000,
-		ENDMEM1=16'h00DE,
-		KEYPAD=16'h00DF,
-		SEVENSEG=16'h00E1,
-		BEGINMEM2=16'h00E2,
-		ENDMEM2=16'h0100;
-//  memory chip
+				ENDMEM1=16'h00DE,
+				KEYPAD=16'h00DF,
+				TIMER=16'h00E1,
+				SEVENSEG=16'h00E3,
+				BEGINMEM2=16'h00E4,
+				ENDMEM2=16'h0100;
+		
+//	memory chip
 reg [15:0] memory [0:255];
 
-// cpu's input-output pins
+//	cpu's input-output pins
+wire memwt;
 wire [15:0] data_out;
-reg [15:0] data_in;
-// reg  [15:0] mem_out;
 wire [15:0] address;
 wire [15:0] mapped_address;
-wire memwt;
-reg [15:0] ssss;
+reg [15:0] data_in;
 
-wire [15:0] sp;
 
 assign mapped_address = (address > 16'h0100) ? 16'h0100 - (16'hFFFF - address) : address;
 
-seven_segment_display ss1 (data_all, grounds, display, clk);
+seven_segment_display ss1 (timer_out, grounds, display, clk);
 
 keypad  kp1(rowwrite,colread,clk,ack,statusordata,keyout);
 
-bird br1 (clk, data_in, data_out, address, sp, memwt);
+bird br1 (clk, data_in, data_out, address, memwt);
+
+timer tmr (clk, timer_ack, timer_out_select, push_button, timer_out);
 
 
-//multiplexer for cpu input7
-
+//multiplexer for cpu input
 always @*
 		if ( ((BEGINMEM1<=mapped_address) && (mapped_address<=ENDMEM1)) || ((BEGINMEM2<=mapped_address) && (mapped_address<=ENDMEM2)) )
 			begin
@@ -70,9 +70,21 @@ always @*
 				data_in=keyout;
 				ack=1;
 			end
+		else if (mapped_address == TIMER + 1)
+			begin	
+				timer_out_select = 1;
+				data_in = timer_out;
+				timer_ack = 0;
+			end
+		else if (mapped_address == TIMER)
+			begin
+				timer_out_select = 0;
+				data_in = timer_out;
+				timer_ack = 1;
+			end
 		else
 			begin
-				data_in=16'hf345; //any number
+				data_in=16'h0599; //not any number
 				ack=0;
 				statusordata=0;
 			end
@@ -84,21 +96,12 @@ always @(posedge clk) begin //data output port of the cpu
 		begin
 			if ( ((BEGINMEM1<=mapped_address) && (mapped_address<=ENDMEM1)) || ((BEGINMEM2<=mapped_address) && (mapped_address<=ENDMEM2)) )
 				memory[mapped_address]<=data_out;
-			else if ( SEVENSEG==mapped_address) 
+			else if ( SEVENSEG == mapped_address) 
 				data_all<=data_out;
 		end
-	//mem_out=memory[mapped_address];
 end
 
 
-always @*
-	begin
-		if (sp <= 16'h00E1 && sp != 16'h0000)
-			leds[0] <= 1;
-	end
-	
-	
-	
 initial 
 	begin
 		leds=0;
