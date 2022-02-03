@@ -102,7 +102,7 @@ always @(posedge clk)
  
 		CALL: 
 			begin
-			      pc <= pc+ir;
+			      pc <= pc + { {4{ir[11]}}, ir[11:0] };
 					regbank[7]<=regbank[7]-1;
 					state <= FETCH;
 			end
