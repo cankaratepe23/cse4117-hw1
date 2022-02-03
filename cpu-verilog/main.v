@@ -41,13 +41,13 @@ reg [15:0] data_in;
 
 assign mapped_address = (address > 16'h0100) ? 16'h0100 - (16'hFFFF - address) : address;
 
-seven_segment_display ss1 (timer_out, grounds, display, clk);
+seven_segment_display ss1 (data_all, grounds, display, clk);
 
 keypad  kp1(rowwrite,colread,clk,ack,statusordata,keyout);
 
 bird br1 (clk, data_in, data_out, address, memwt);
 
-timer tmr (clk, timer_ack, timer_out_select, push_button, timer_out);
+timer tmr (clk, timer_ack, timer_out_select, ~push_button, timer_out);
 
 
 //multiplexer for cpu input
@@ -101,7 +101,9 @@ always @(posedge clk) begin //data output port of the cpu
 		end
 end
 
-
+always @*
+	leds[0] = ~push_button;
+	
 initial 
 	begin
 		leds=0;
