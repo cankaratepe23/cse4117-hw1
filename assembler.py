@@ -292,10 +292,14 @@ def assemble(inputfilename: str, outfilename: str):
         datablocksize = datablocksize + variable.size
 
     # Generate numeric addresses for the labels and variables in the instructions.
+    # Also convert any immediate values to their proper hex representation.
     # Put hex representations of the instructions to a string.
     instruction: Instruction
     for instruction in instructions:
         instruction.args = [(int(arg, 0) if arg.isdigit() or arg.startswith("0x") else findlabelorvariable(arg, instruction)) for arg in instruction.strargs]
+        invalid_args = [arg for arg in instruction.args if isinstance(arg, int) and 65535 < arg]
+        if (len(invalid_args) != 0):
+            raise RuntimeError(f"Immediate value larger than 16-bit maximum 65'535 was found when processing the following instruction: {instruction}\nThe offending argument{'s were:' if len(invalid_args) > 1 else ' was:'} {invalid_args}")
         outcontent = outcontent + gethexinstruction(instruction) + "\n"
 
     # Put hex representations of the variables to the string.
