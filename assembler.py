@@ -6,10 +6,11 @@ import webbrowser
 OPCODE_SHIFT_LEFT_AMOUNT = 12
 definedinstructions = {"ldi": 1, "inc": 7, "dec": 7, "mov": 7, "not": 7, "add": 7,
                        "sub": 7, "and": 7, "or": 7, "xor": 7, "ld": 2, "st": 3, "jmp": 5, "jz": 4,
-                       "push": 8, "pop": 9, "call": 10, "ret": 11}
+                       "push": 8, "pop": 9, "call": 10, "ret": 11, "sti": 12, "cli": 13, "iret": 14}
 dwordinstructions = ["ldi", "jmp", "jz"]
 alucodes = {"inc": 58, "dec": 59, "mov": 57, "not": 56, "add": 0, "sub": 1, "and": 2, "or": 3, "xor": 4 }
 instructions = []
+serviceroutines = []
 variables = []
 codeblocksize = 0
 datablocksize = 0
@@ -140,7 +141,7 @@ def findlabelorvariable(label: str, sourceinstruction: Instruction):
     instruction: Instruction
     for instruction in instructions:
         if instruction.strlabel and instruction.strlabel == label:
-            if sourceinstruction.strop == "jmp" or sourceinstruction.strop == "jz":
+            if sourceinstruction.strop == "jmp" or sourceinstruction.strop == "jz" or sourceinstruction.strop == "ldi":
                 return instruction.address
             elif sourceinstruction.strop == "call":
                 reloffset = instruction.address - sourceinstruction.address - 1
@@ -210,7 +211,7 @@ def gethexinstruction(instruction: Instruction):
     elif operation == "push":
         #                                               r
         instructionline_1 = instructionline_1 | (args[0] << 6)
-    elif operation == "ret": # This line is needed to avoid exceptions.
+    elif operation == "ret" or operation == "sti" or operation == "cli": # This line is needed to avoid exceptions.
         # d
         pass
     else:
