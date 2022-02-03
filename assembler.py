@@ -211,7 +211,7 @@ def gethexinstruction(instruction: Instruction):
     elif operation == "push":
         #                                               r
         instructionline_1 = instructionline_1 | (args[0] << 6)
-    elif operation == "ret" or operation == "sti" or operation == "cli": # This line is needed to avoid exceptions.
+    elif operation == "ret" or operation == "sti" or operation == "cli" or operation == "iret": # This line is needed to avoid exceptions.
         # d
         pass
     else:
