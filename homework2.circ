@@ -297,8 +297,8 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(150,100)" to="(170,100)"/>
     <wire from="(480,1080)" to="(490,1080)"/>
     <wire from="(150,170)" to="(230,170)"/>
-    <wire from="(200,80)" to="(210,80)"/>
     <wire from="(590,750)" to="(590,810)"/>
+    <wire from="(200,80)" to="(210,80)"/>
     <wire from="(530,390)" to="(660,390)"/>
     <wire from="(670,190)" to="(670,240)"/>
     <wire from="(920,1040)" to="(930,1040)"/>
@@ -982,6 +982,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="label" val="CLI"/>
       <a name="labelfont" val="SansSerif plain 8"/>
     </comp>
+    <comp lib="0" loc="(210,80)" name="Constant">
+      <a name="facing" val="west"/>
+    </comp>
     <comp lib="0" loc="(370,720)" name="Tunnel">
       <a name="width" val="3"/>
       <a name="label" val="IR_OUT[5:3]"/>
@@ -990,9 +993,6 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="facing" val="south"/>
       <a name="width" val="16"/>
       <a name="label" val="Din"/>
-    </comp>
-    <comp lib="0" loc="(210,80)" name="Constant">
-      <a name="facing" val="west"/>
     </comp>
     <comp lib="1" loc="(240,210)" name="AND Gate">
       <a name="facing" val="north"/>
@@ -1113,7 +1113,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     </comp>
     <comp lib="0" loc="(80,80)" name="Constant">
       <a name="width" val="16"/>
-      <a name="value" val="0x70"/>
+      <a name="value" val="0x32"/>
     </comp>
     <comp lib="0" loc="(890,550)" name="Tunnel">
       <a name="width" val="16"/>
@@ -1186,7 +1186,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp lib="0" loc="(830,880)" name="Constant">
       <a name="facing" val="south"/>
       <a name="width" val="16"/>
-      <a name="value" val="0x100"/>
+      <a name="value" val="0x200"/>
     </comp>
     <comp lib="0" loc="(440,150)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -3878,9 +3878,9 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="addrWidth" val="5"/>
       <a name="dataWidth" val="25"/>
       <a name="contents">addr/data: 5 25
-1001020 1280 680 440 1000 12000 0 300
-4840 8011 26840 8012 80000 100000 8010 81aa91
-800 a80 12880 124854 640855 12c00
+100103f 1280 680 440 1000 12000 0 300
+4840 8011 26840 8012 80000 100000 800f 808890
+12800 a80 12880 124854 644855 12c00
 </a>
     </comp>
     <comp lib="0" loc="(1010,440)" name="Pin">

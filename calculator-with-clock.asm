@@ -48,8 +48,10 @@ isr1    ldi 0 0xd006
         call bcd
         ldi 1 0xd005
         st 1 0
-exit    jmp exit
-        ret
+        ldi 0 0xd006
+        ldi 1 0x0000
+        st 0 1
+        iret
 
 // poll_setup: reg1 and reg2 are setup to the appropriate constants for polling
 // values of reg1 and reg2 are NOT preserved
