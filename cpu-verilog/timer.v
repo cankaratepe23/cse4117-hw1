@@ -6,7 +6,7 @@ module timer(
 				output reg [15:0] data_out
 				);
 				
-		
+reg ready;	
 reg [26:0] clk1;
 reg [15:0] data;
 reg [15:0] current_time; 
