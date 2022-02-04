@@ -158,7 +158,7 @@ bcd                 push 1
 // Register 0 is written to 7 segment display
 write_display   push 1
                 ldi 1 0x00E1    // 7 segment address
-                // call bcd
+                call bcd
                 st 1 0          // write value to 7 segment
                 pop 1
                 ret
