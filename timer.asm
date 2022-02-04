@@ -19,6 +19,12 @@ start           call poll_and_read  // read a character
                 sub 0 1 2           // if entered key is 0xa
                 jz rst_op           // go to addition
                 //// default case, a new digit is entered:
+                
+                ldi 2 1000
+                mov 1 5
+                call div
+                mov 5 3
+                
                 mov 1 5             // prepare to mult the previous number by 10
                 ldi 2 10
                 call mult           // reg0 = reg5 * 10
