@@ -99,9 +99,9 @@ always @(posedge clk)
  
 		CALL: 
 			begin
-			      pc <= pc + { {4{ir[11]}}, ir[11:0] };
+			      // pc <= pc + { {4{ir[11]}}, ir[11:0] };
 					regbank[7]<=regbank[7]-1;
-					state <= FETCH;
+					state <= JMP;
 			end
  
 		RET1:
