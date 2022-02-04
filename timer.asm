@@ -24,6 +24,8 @@ start           call poll_and_read  // read a character
                 mov 1 5
                 call div
                 mov 5 3
+                mov 1 1
+                mov 1 1
                 
                 mov 1 5             // prepare to mult the previous number by 10
                 ldi 2 10
@@ -131,6 +133,7 @@ div_loop            mov 3 1         // reg3 = reg1
 // bcd: converts integer value given in reg0, inplace, to its BCD value.
 bcd                 push 1
                     push 2
+                    push 3
                     push 6
                     
                     mov 1 0
@@ -161,6 +164,7 @@ bcd                 push 1
 
                     mov 0 6         // return value in reg6
                     pop 6
+                    pop 3
                     pop 2
                     pop 1
                     ret

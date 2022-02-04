@@ -26,7 +26,7 @@ localparam	BEGINMEM1=16'h0000,
 				TIMER=16'h00E1,
 				SEVENSEG=16'h00E3,
 				BEGINMEM2=16'h00E4,
-				ENDMEM2=16'h0100;
+				ENDMEM2=16'h00FF;
 		
 //	memory chip
 reg [15:0] memory [0:255];
@@ -39,7 +39,7 @@ wire [15:0] mapped_address;
 reg [15:0] data_in;
 
 
-assign mapped_address = (address > 16'h0100) ? 16'h0100 - (16'hFFFF - address) : address;
+assign mapped_address = (address > ENDMEM2) ? ENDMEM2 - (16'hFFFF - address) : address;
 
 seven_segment_display ss1 (data_all, grounds, display, clk);
 
