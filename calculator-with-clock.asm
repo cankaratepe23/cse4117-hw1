@@ -39,7 +39,9 @@ wait_pb_1           ldi 1 1             // reg1 = 1
                     jmp poll            // start polling if not
 
 
-isr1    ldi 0 0xd006
+isr1    push 0
+        push 1
+        ldi 0 0xd006
         ldi 1 0x0001
         st 0 1
         ldi 0 0xd004
@@ -51,6 +53,8 @@ isr1    ldi 0 0xd006
         ldi 0 0xd006
         ldi 1 0x0000
         st 0 1
+        pop 1
+        pop 0
         iret
 
 // poll_setup: reg1 and reg2 are setup to the appropriate constants for polling
