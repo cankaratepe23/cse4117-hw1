@@ -1,7 +1,7 @@
 # CSE4117 Microprocessors Projects
 ## Description
 
-This repository was made public on XX/XX/2022.
+This repository was made public on 09/03/2022.
 
 This repository contains all the work we did for the three projects assigned to us as part of the CSE4117 Microprocessors course at Marmara University.
 
